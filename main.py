@@ -1,9 +1,17 @@
 import json
+
 import requests
 import time
 from threading import Thread
+from flask import Flask
 
 data = {'online': True, 'rawTime': '', 'time': [0, 0], 'rain': True}
+app = Flask(__name__)
+
+
+@app.route('/mtime/api/v0.1/')
+def get():
+    return json.dumps(data)
 
 
 def timestamp():
@@ -32,7 +40,6 @@ def work():
             server_data()
             server_time(data['rawTime'])
             data['online'] = True
-            print(data)
         except requests.exceptions.ConnectionError:
             print('M_Connection trouble')
         except requests.exceptions.ReadTimeout:
@@ -44,14 +51,10 @@ def work():
             break
 
 
-def serv():
-    pass
-
-
 if __name__ == '__main__':
     try:
-        Thread(target=work).start()
-        Thread(target=serv).start()
         print('Started...')
+        Thread(target=work).start()
+        app.run()
     except:
         print('error on starting')
