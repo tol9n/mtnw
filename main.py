@@ -14,7 +14,7 @@ def get():
     return json.dumps(data)
 
 
-def timestamp():
+def timestamp() -> str:
     return str(time.time_ns())[:13]
 
 
@@ -52,9 +52,10 @@ def work():
 
 
 if __name__ == '__main__':
+    from waitress import serve
     try:
         print('Started...')
         Thread(target=work).start()
-        app.run()
+        serve(app, host='0.0.0.0',port=5000)
     except:
         print('error on starting')
